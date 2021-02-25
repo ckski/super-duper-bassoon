@@ -34,7 +34,9 @@ public final class BanknoteDispenser extends AbstractDevice<BanknoteDispenserLis
 	 */
 	public BanknoteDispenser(int capacity) {
 		if(capacity <= 0)
+		{
 			throw new SimulationException(new IllegalArgumentException("Capacity must be positive: " + capacity));
+		}
 		this.maxCapacity = capacity;
 	}
 
@@ -62,13 +64,19 @@ public final class BanknoteDispenser extends AbstractDevice<BanknoteDispenserLis
 	 */
 	public void load(Banknote... banknotes) throws SimulationException, OverloadException {
 		if(maxCapacity < queue.size() + banknotes.length)
+		{
 			throw new OverloadException("Capacity of dispenser is exceeded by load");
+		}
 
 		for(Banknote banknote : banknotes)
 			if(banknote == null)
+			{
 				throw new SimulationException(new NullPointerException("A banknote is null."));
+			}
 			else
+			{
 				queue.add(banknote);
+			}
 
 		notifyLoad(banknotes);
 	}
@@ -134,14 +142,19 @@ public final class BanknoteDispenser extends AbstractDevice<BanknoteDispenserLis
 	 */
 	public void emit() throws EmptyException, DisabledException, OverloadException {
 		if(isDisabled())
+		{
 			throw new DisabledException();
+		}
 
 		if(queue.size() == 0)
+		{
 			throw new EmptyException();
+		}
 
 		Banknote banknote = queue.remove();
 
 		if(sink.hasSpace())
+		{
 			try {
 				sink.deliver(banknote);
 			}
@@ -149,13 +162,20 @@ public final class BanknoteDispenser extends AbstractDevice<BanknoteDispenserLis
 				// Should never happen
 				throw new SimulationException(e);
 			}
+		}
 		else
+		{
 			throw new OverloadException("The sink is full.");
+		}
 
 		if(queue.isEmpty())
+		{
 			notifyBanknotesEmpty();
+		}
 		else
+		{
 			notifyBanknoteRemoved(banknote);
+		}
 	}
 
 	private void notifyBanknoteRemoved(Banknote banknote) {
