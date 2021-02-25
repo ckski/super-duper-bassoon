@@ -43,20 +43,22 @@ public final class CoinSlot extends AbstractDevice<CoinSlotListener> implements 
 		if(isDisabled())
 			throw new DisabledException();
 
-		if(coin == null)
-			throw new SimulationException(new NullPointerException("coin is null"));
-
-		notifyCoinInserted();
-
-		if(sink.hasSpace()) {
-			try {
-				sink.deliver(coin);
-			}
-			catch(OverloadException e) {
-				// Should never happen
-				throw new SimulationException(e);
+		if(coin != null) {
+			notifyCoinInserted();
+	
+			if(sink.hasSpace()) {
+				try {
+					sink.deliver(coin);
+				}
+				catch(OverloadException e) {
+					// Should never happen
+					throw new SimulationException(e);
+				}
 			}
 		}
+		else if(coin == null)
+			throw new SimulationException(new NullPointerException("coin is null"));
+		
 		else
 			throw new SimulationException("Unable to route coin: Output channel is full");
 	}
