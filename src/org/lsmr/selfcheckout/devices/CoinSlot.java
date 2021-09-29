@@ -40,6 +40,12 @@ public final class CoinSlot extends AbstractDevice<CoinSlotListener> implements 
 	 *             If the coin is null.
 	 */
 	public void accept(Coin coin) throws DisabledException {
+		if(coin == null)
+    		throw new SimulationException(new NullPointerException("coin is null"));
+
+		if(sink == null)
+			throw new SimulationException(new NullPointerException("sink is null"));
+		
 		if(isDisabled())
 			throw new DisabledException();
 
